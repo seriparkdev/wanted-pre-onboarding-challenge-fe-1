@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/reducers";
 import { authActions } from "../store/slice";
+import AddModal from "../components/AddModal";
 
 export default function Home() {
   interface Todo {
@@ -16,6 +17,8 @@ export default function Home() {
   }
   const dispatch = useDispatch();
   const [todoList, setTodoList] = useState<Todo[]>([]);
+
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const auth = useSelector((state: RootState) => state.auth.auth);
 
   useEffect(() => {
@@ -36,6 +39,10 @@ export default function Home() {
   function logoutHandler() {
     dispatch(authActions.logout());
     localStorage.removeItem("token");
+  }
+
+  function openModalHandler() {
+    setIsOpenModal(!isOpenModal);
   }
 
   return (
@@ -70,6 +77,9 @@ export default function Home() {
             <button>회원가입</button>
           </Link>
         </>
+      )}
+      {isOpenModal && (
+        <AddModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
       )}
     </>
   );
