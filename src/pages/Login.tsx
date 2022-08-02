@@ -2,9 +2,12 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store/slice";
 
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState<string>("");
   const [pwd, setPwd] = useState<string>("");
 
@@ -27,17 +30,17 @@ export default function Login() {
         .then((res) => {
           if (res.data.token) {
             localStorage.setItem("token", res.data.token);
+            console.log(res.data);
+            dispatch(authActions.login());
             navigate("/");
           }
         });
     } catch (error: any) {
-      console.log(error.response);
       alert(error.response.data.details);
     }
   }
   return (
     <div>
-      <div>TODO LIST</div>
       <form onSubmit={loginHandler}>
         <div>Login</div>
         <input
