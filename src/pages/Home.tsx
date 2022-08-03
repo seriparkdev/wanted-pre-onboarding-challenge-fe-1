@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Link, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -87,6 +86,16 @@ export default function Home() {
       }
     );
   }
+
+  function deleteTodo(id: string) {
+    const token = localStorage.getItem("token");
+    axios.delete(`http://localhost:8080/todos/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
   return (
     <>
       {auth ? (
@@ -98,18 +107,6 @@ export default function Home() {
           {todoList &&
             todoList.map((item) => (
               <div key={item.id}>
-                <div>{item.title}</div>
-                <button>수정</button>
-                <button>삭제</button>
-              </div>
-            ))}
-          {todoList &&
-            todoList.map((item) => (
-              <div key={item.id}>
-                <div>{item.title}</div>
-                <div>{item.content}</div>
-                <div>{item.createdAt}</div>
-                <div>{item.updatedAt}</div>
                 {isEdit && item.id === todoId ? (
                   <div>
                     <textarea
@@ -138,6 +135,13 @@ export default function Home() {
                     >
                       수정
                     </button>
+
+                    <button type="button" onClick={() => deleteTodo(item.id)}>
+                      삭제
+                    </button>
+                  </div>
+                )}
+
                 <Routes>
                   <Route
                     path={`/${item.id}`}
