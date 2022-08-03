@@ -19,6 +19,7 @@ export default function Home() {
   const [todoList, setTodoList] = useState<Todo[]>([]);
 
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [todoId, setTodoId] = useState<string>("");
   const auth = useSelector((state: RootState) => state.auth.auth);
 
   useEffect(() => {
@@ -45,6 +46,18 @@ export default function Home() {
     setIsOpenModal(!isOpenModal);
   }
 
+  function getTodoById(id: string) {
+    const token = localStorage.getItem("token");
+    axios
+      .get(`http://localhost:8080/todos/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setTodoId(res.data.data.id);
+      });
+  }
   return (
     <>
       {auth ? (
