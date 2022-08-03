@@ -34,7 +34,7 @@ export default function Home() {
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  }, [todoList]);
 
   function logoutHandler() {
     dispatch(authActions.logout());
@@ -57,16 +57,19 @@ export default function Home() {
             todoList.map((item) => (
               <div key={item.id}>
                 <div>{item.title}</div>
+                <button>수정</button>
+                <button>삭제</button>
               </div>
             ))}
-          {todoList.map((item) => (
-            <div key={item.id}>
-              <div>{item.title}</div>
-              <div>{item.content}</div>
-              <div>{item.createdAt}</div>
-              <div>{item.updatedAt}</div>
-            </div>
-          ))}
+          {todoList &&
+            todoList.map((item) => (
+              <div key={item.id}>
+                <div>{item.title}</div>
+                <div>{item.content}</div>
+                <div>{item.createdAt}</div>
+                <div>{item.updatedAt}</div>
+              </div>
+            ))}
         </div>
       ) : (
         <>
