@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { signUp } from "../apis";
 
 export default function Join() {
   const navigate = useNavigate();
@@ -10,11 +10,7 @@ export default function Join() {
   async function joinHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/users/create", {
-        email: email,
-        password: pwd,
-      });
-
+      await signUp(email, pwd);
       navigate("/");
     } catch (error: any) {
       alert(error.response.data.details);
@@ -33,17 +29,16 @@ export default function Join() {
     <>
       <div>환영합니다</div>
       <form onSubmit={joinHandler}>
-        <label htmlFor="email">이메일</label>
         <input
           type="text"
-          placeholder="email"
+          placeholder="이메일을 입력해주세요"
           id="email"
           onChange={joinEmailHandler}
         />
-        <label htmlFor="password">비밀번호</label>
+
         <input
           type="text"
-          placeholder="password"
+          placeholder="비밀번호를 입력해주세요"
           id="password"
           onChange={joinPwdHandler}
         />

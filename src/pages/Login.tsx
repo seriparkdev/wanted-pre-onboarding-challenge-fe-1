@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/slice";
+import { login } from "../apis";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -22,19 +22,13 @@ export default function Login() {
   async function loginHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      await axios
-        .post("http://localhost:8080/users/login", {
-          email: email,
-          password: pwd,
-        })
-        .then((res) => {
-          if (res.data.token) {
-            localStorage.setItem("token", res.data.token);
-            console.log(res.data);
-            dispatch(authActions.login());
-            navigate("/");
-          }
-        });
+      await login(email, pwd).then((res) => {
+        if (res.data.token) {
+          localStorage.setItem("token", res.data.token);
+          dispatch(authActions.login());
+          navigate("/");
+        }
+      });
     } catch (error: any) {
       alert(error.response.data.details);
     }
@@ -46,14 +40,14 @@ export default function Login() {
         <input
           type="text"
           name="email"
-          placeholder="이메일"
+          placeholder="이메일을 입력해주세요"
           onChange={LoginEmailHandler}
           required
         />
         <input
           type="text"
           name="password"
-          placeholder="비밀번호"
+          placeholder="비밀번호를 입력해주세요"
           onChange={LoginPwdHandler}
           required
         />
