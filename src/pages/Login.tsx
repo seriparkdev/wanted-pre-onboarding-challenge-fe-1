@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/slice";
 import { login } from "../apis";
@@ -11,6 +11,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const [email, setEmail] = useState<string>("");
   const [pwd, setPwd] = useState<string>("");
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   function LoginEmailHandler(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
@@ -34,6 +35,15 @@ export default function Login() {
       alert(error.response.data.details);
     }
   }
+
+  useEffect(() => {
+    email.includes("@") && email.includes(".") && pwd.length >= 8
+      ? setIsActive(true)
+      : setIsActive(false);
+  }),
+    [email],
+    [pwd];
+
   return (
     <>
       <header className="pt-20 text-center font-black pb-4">
@@ -54,7 +64,7 @@ export default function Login() {
           required
         />
         <input
-          type="text"
+          type="password"
           name="password"
           placeholder="비밀번호를 입력해주세요"
           onChange={LoginPwdHandler}
@@ -63,7 +73,12 @@ export default function Login() {
         />
         <button
           type="submit"
-          className="mt-6 bg-[#c5cae9] text-white rounded p-4 hover:bg-[#7986cb] font-semibold"
+          disabled={!isActive}
+          className={
+            isActive
+              ? "mt-6 text-white rounded p-4 bg-[#7986cb] font-semibold"
+              : "mt-6 bg-[#c5cae9] text-white rounded p-4 font-semibold"
+          }
         >
           로그인
         </button>
