@@ -60,7 +60,7 @@ export function deleteTodo(id: string, userToken: string) {
 }
 
 export function signUp(email: string, pwd: string) {
-  axios.post("http://localhost:8080/users/create", {
+  return axios.post("http://localhost:8080/users/create", {
     email: email,
     password: pwd,
   });
