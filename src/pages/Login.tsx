@@ -11,7 +11,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const [email, setEmail] = useState<string>("");
   const [pwd, setPwd] = useState<string>("");
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isActiveLogin, setIsActiveLogin] = useState<boolean>(false);
 
   function LoginEmailHandler(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
@@ -38,8 +38,8 @@ export default function Login() {
 
   useEffect(() => {
     email.includes("@") && email.includes(".") && pwd.length >= 8
-      ? setIsActive(true)
-      : setIsActive(false);
+      ? setIsActiveLogin(true)
+      : setIsActiveLogin(false);
   }),
     [email],
     [pwd];
@@ -73,9 +73,9 @@ export default function Login() {
         />
         <button
           type="submit"
-          disabled={!isActive}
+          disabled={!isActiveLogin}
           className={
-            isActive
+            isActiveLogin
               ? "mt-6 text-white rounded p-4 bg-[#7986cb] font-semibold"
               : "mt-6 bg-[#c5cae9] text-white rounded p-4 font-semibold"
           }

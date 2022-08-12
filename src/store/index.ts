@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { perReducer } from "./reducers";
+import { persistreducer } from "./reducers";
 import {
   FLUSH,
   REHYDRATE,
@@ -10,7 +10,7 @@ import {
 } from "redux-persist";
 
 const store = configureStore({
-  reducer: perReducer,
+  reducer: persistreducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

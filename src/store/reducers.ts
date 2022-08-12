@@ -15,4 +15,4 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 export type RootState = ReturnType<typeof rootReducer>;
-export const perReducer = persistReducer(persistConfig, rootReducer);
+export const persistreducer = persistReducer(persistConfig, rootReducer);

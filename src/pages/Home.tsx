@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/reducers";
 import { authActions } from "../store/slice";
 import { getTodos, getTodoById, updateTodo, deleteTodo } from "../apis";
-import AddTodo from "../components/AddTodo";
+import AddModal from "../components/AddModal";
 
 export default function Home() {
   interface Todo {
@@ -19,12 +19,12 @@ export default function Home() {
   const dispatch = useDispatch();
   const userToken = localStorage.getItem("token");
   const [todoList, setTodoList] = useState<Todo[]>([]);
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [todoId, setTodoId] = useState<string>("");
   const [newTitle, setNewTitle] = useState<string>("");
   const [newContent, setNewContent] = useState<string>("");
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const auth = useSelector((state: RootState) => state.auth.auth);
+  const hasAuth = useSelector((state: RootState) => state.auth.auth);
 
   useEffect(() => {
     try {
@@ -43,7 +43,7 @@ export default function Home() {
   }
 
   function updateTodoHandler(id: string) {
-    setIsEdit(!isEdit);
+    setIsEditMode(!isEditMode);
     updateTodo(newTitle, newContent, id, `Bearer ${userToken}`);
   }
 
@@ -57,17 +57,17 @@ export default function Home() {
   }
 
   function updateHandler(id: string) {
-    setIsEdit(!isEdit);
+    setIsEditMode(!isEditMode);
     getTodoIdHandler(id);
   }
 
   function editModeHandler() {
-    setIsEdit(!isEdit);
+    setIsEditMode(!isEditMode);
   }
 
   return (
     <>
-      {auth ? (
+      {hasAuth ? (
         <div>
           <header className="bg-[#5c6bc0] p-3 text-center fixed right-0 left-0 top-0 z-50">
             <span className="text-white font-medium">✔ TODO LIST APP</span>
@@ -91,7 +91,7 @@ export default function Home() {
             <section className="mt-1">
               {todoList.map((item) => (
                 <div key={item.id}>
-                  {isEdit && item.id === todoId ? (
+                  {isEditMode && item.id === todoId ? (
                     <div className="rounded flex flex-col pb-3 bg-white mx-16 break-all p-6 mb-6">
                       <input
                         type="text"
@@ -206,7 +206,7 @@ export default function Home() {
         @seriparkdev
       </footer>
       {isOpenModal && (
-        <AddTodo isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
+        <AddModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
       )}
     </>
   );

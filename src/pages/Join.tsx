@@ -7,7 +7,7 @@ export default function Join() {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [pwd, setPwd] = useState<string>("");
-  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isActiveLogin, setIsActiveLogin] = useState<boolean>(false);
   const [emailAlert, setEmailAlert] = useState<string>("");
   const [pwdAlert, setPwdAlert] = useState<string>("");
 
@@ -26,8 +26,8 @@ export default function Join() {
 
   useEffect(() => {
     email.includes("@") && email.includes(".") && pwd.length >= 8
-      ? setIsActive(true)
-      : setIsActive(false);
+      ? setIsActiveLogin(true)
+      : setIsActiveLogin(false);
   }),
     [email],
     [pwd];
@@ -73,7 +73,7 @@ export default function Join() {
           onChange={joinEmailHandler}
           required
         />
-        {!isActive && <div className="text-[#e45f5a]">{emailAlert}</div>}
+        {!isActiveLogin && <div className="text-[#e45f5a]">{emailAlert}</div>}
         <input
           type="password"
           placeholder="비밀번호를 입력해주세요"
@@ -82,12 +82,12 @@ export default function Join() {
           onChange={joinPwdHandler}
           required
         />
-        {!isActive && <div className="text-[#e45f5a]">{pwdAlert}</div>}
+        {!isActiveLogin && <div className="text-[#e45f5a]">{pwdAlert}</div>}
         <button
           type="submit"
-          disabled={!isActive}
+          disabled={!isActiveLogin}
           className={
-            isActive
+            isActiveLogin
               ? "mt-6 text-white rounded p-4 bg-[#7986cb] font-semibold"
               : "mt-6 bg-[#c5cae9] text-white rounded p-4 font-semibold"
           }
