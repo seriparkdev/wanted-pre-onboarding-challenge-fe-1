@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { createTodo } from "../apis";
+import { createTodo } from "../../api/apis";
 
-export default function AddTodo({
+const AddTodoModal = ({
   isOpenModal,
   setIsOpenModal,
 }: {
   isOpenModal: boolean;
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+}) => {
   const userToken = localStorage.getItem("token");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
-  function createTodoHandler(e: React.FormEvent<HTMLFormElement>) {
+  const createTodoHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       createTodo(title, content, `Bearer ${userToken}`);
@@ -20,7 +20,15 @@ export default function AddTodo({
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  const inputTitleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const inputContentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
+  };
 
   return (
     <>
@@ -33,7 +41,7 @@ export default function AddTodo({
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={inputTitleHandler}
           placeholder="할일을 입력해주세요"
           className="p-3 mb-3 rounded border-2 border-[#999999] outline-[#7986cb] w-full"
           required
@@ -41,7 +49,7 @@ export default function AddTodo({
         <input
           type="text"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={inputContentHandler}
           placeholder="상세 내용을 입력해주세요"
           className="border-2 border-[#999999] p-3 rounded outline-[#7986cb] w-full"
           required
@@ -62,4 +70,6 @@ export default function AddTodo({
       </form>
     </>
   );
-}
+};
+
+export default AddTodoModal;
