@@ -8,8 +8,8 @@ const AddTodoModal = ({
   isOpenModal: boolean;
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const createTodoHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

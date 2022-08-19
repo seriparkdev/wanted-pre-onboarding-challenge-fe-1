@@ -11,11 +11,11 @@ import { Todo } from "../types/todo";
 const Home = () => {
   const dispatch = useDispatch();
   const [todoList, setTodoList] = useState<Todo[]>([]);
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
-  const [todoId, setTodoId] = useState<string>("");
-  const [newTitle, setNewTitle] = useState<string>("");
-  const [newContent, setNewContent] = useState<string>("");
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [todoId, setTodoId] = useState("");
+  const [newTitle, setNewTitle] = useState("");
+  const [newContent, setNewContent] = useState("");
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const hasAuth = useSelector((state: RootState) => state.auth.auth);
 
   useEffect(() => {

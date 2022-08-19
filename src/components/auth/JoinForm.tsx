@@ -4,11 +4,11 @@ import { signUp } from "../../api/auth";
 
 const JoinForm = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isActiveJoinBtn, setIsActiveJoinBtn] = useState<boolean>(false);
-  const [emailAlert, setEmailAlert] = useState<string>("");
-  const [passwordAlert, setPasswordAlert] = useState<string>("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isActiveJoinBtn, setIsActiveJoinBtn] = useState(false);
+  const [emailAlert, setEmailAlert] = useState("");
+  const [passwordAlert, setPasswordAlert] = useState("");
 
   const joinHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -8,9 +8,9 @@ import { login } from "../../api/auth";
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isActiveLogin, setIsActiveLogin] = useState<boolean>(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isActiveLogin, setIsActiveLogin] = useState(false);
 
   const inputEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);

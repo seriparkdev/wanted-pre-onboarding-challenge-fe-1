@@ -9,9 +9,9 @@ import { Link } from "react-router-dom";
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isActiveLogin, setIsActiveLogin] = useState<boolean>(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isActiveLogin, setIsActiveLogin] = useState(false);
 
   function LoginEmailHandler(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
