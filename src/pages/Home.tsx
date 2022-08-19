@@ -6,18 +6,10 @@ import { RootState } from "../store/reducers";
 import { authActions } from "../store/slice";
 import { getTodos, getTodoById, updateTodo, deleteTodo } from "../api/todo";
 import AddTodoModal from "../components/modal/AddTodoModal";
+import { Todo } from "../types/todo";
 
 const Home = () => {
-  interface Todo {
-    content: string;
-    createdAt: string;
-    id: string;
-    title: string;
-    updatedAt: string;
-  }
-
   const dispatch = useDispatch();
-  const userToken = localStorage.getItem("token");
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [todoId, setTodoId] = useState<string>("");
@@ -30,6 +22,7 @@ const Home = () => {
     try {
       getTodos().then((res) => {
         setTodoList(res.data.data);
+        console.log(res);
       });
     } catch (error) {
       console.log(error);
