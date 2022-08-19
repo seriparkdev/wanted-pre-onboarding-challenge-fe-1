@@ -3,28 +3,28 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/slice";
-import { login } from "../apis";
+import { login } from "../api/auth";
 import { Link } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState<string>("");
-  const [pwd, setPwd] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isActiveLogin, setIsActiveLogin] = useState<boolean>(false);
 
   function LoginEmailHandler(e: React.ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
   }
 
-  function LoginPwdHandler(e: React.ChangeEvent<HTMLInputElement>) {
-    setPwd(e.target.value);
+  function LoginpasswordHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(e.target.value);
   }
 
   async function loginHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      await login(email, pwd).then((res) => {
+      await login({ email, password }).then((res) => {
         if (res.data.token) {
           localStorage.setItem("token", res.data.token);
           dispatch(authActions.login());
@@ -37,12 +37,12 @@ export default function Login() {
   }
 
   useEffect(() => {
-    email.includes("@") && email.includes(".") && pwd.length >= 8
+    email.includes("@") && email.includes(".") && password.length >= 8
       ? setIsActiveLogin(true)
       : setIsActiveLogin(false);
   }),
     [email],
-    [pwd];
+    [password];
 
   return (
     <>
@@ -67,7 +67,7 @@ export default function Login() {
           type="password"
           name="password"
           placeholder="비밀번호를 입력해주세요"
-          onChange={LoginPwdHandler}
+          onChange={LoginpasswordHandler}
           className="text-center rounded p-3 outline-[#7986cb]"
           required
         />

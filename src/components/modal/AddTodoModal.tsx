@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createTodo } from "../../api/apis";
+import { createTodo } from "../../api/todo";
 
 const AddTodoModal = ({
   isOpenModal,
@@ -8,14 +8,13 @@ const AddTodoModal = ({
   isOpenModal: boolean;
   setIsOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const userToken = localStorage.getItem("token");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
   const createTodoHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      createTodo(title, content, `Bearer ${userToken}`);
+      createTodo(title, content);
       setTitle(""), setContent(""), setIsOpenModal(!isOpenModal);
     } catch (error) {
       console.log(error);

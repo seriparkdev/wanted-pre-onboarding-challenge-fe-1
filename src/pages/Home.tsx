@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/reducers";
 import { authActions } from "../store/slice";
-import { getTodos, getTodoById, updateTodo, deleteTodo } from "../apis";
-import AddModal from "../components/AddModal";
+import { getTodos, getTodoById, updateTodo, deleteTodo } from "../api/todo";
+import AddTodoModal from "../components/modal/AddTodoModal";
 
-export default function Home() {
+const Home = () => {
   interface Todo {
     content: string;
     createdAt: string;
@@ -28,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
     try {
-      getTodos(`Bearer ${userToken}`).then((res) => {
+      getTodos().then((res) => {
         setTodoList(res.data.data);
       });
     } catch (error) {
@@ -37,18 +37,18 @@ export default function Home() {
   }, [todoList]);
 
   function getTodoIdHandler(id: string) {
-    getTodoById(id, `Bearer ${userToken}`).then((res) => {
+    getTodoById(id).then((res) => {
       setTodoId(res.data.data.id);
     });
   }
 
   function updateTodoHandler(id: string) {
     setIsEditMode(!isEditMode);
-    updateTodo(newTitle, newContent, id, `Bearer ${userToken}`);
+    updateTodo(newTitle, newContent, id);
   }
 
   function deleteTodoHandler(id: string) {
-    deleteTodo(id, `Bearer ${userToken}`);
+    deleteTodo(id);
   }
 
   function logoutHandler() {
@@ -206,8 +206,12 @@ export default function Home() {
         @seriparkdev
       </footer>
       {isOpenModal && (
-        <AddModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
+        <AddTodoModal
+          isOpenModal={isOpenModal}
+          setIsOpenModal={setIsOpenModal}
+        />
       )}
     </>
   );
-}
+};
+export default Home;

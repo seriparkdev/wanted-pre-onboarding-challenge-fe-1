@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signUp } from "../../api/apis";
+import { signUp } from "../../api/auth";
 
 const JoinForm = () => {
   const navigate = useNavigate();
@@ -13,9 +13,10 @@ const JoinForm = () => {
   const joinHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await signUp(email, password).then((res) => {
+      await signUp({ email, password }).then((res) => {
         if (res.data.token) {
           navigate("/login");
+          console.log(res);
         }
       });
     } catch (error: any) {

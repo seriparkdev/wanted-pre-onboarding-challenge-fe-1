@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/slice";
-import { login } from "../../api/apis";
+import { login } from "../../api/auth";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const LoginForm = () => {
   const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await login(email, password).then((res) => {
+      await login({ email, password }).then((res) => {
         if (res.data.token) {
           localStorage.setItem("token", res.data.token);
           dispatch(authActions.login());
