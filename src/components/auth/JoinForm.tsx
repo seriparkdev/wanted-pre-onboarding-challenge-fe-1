@@ -9,6 +9,8 @@ const JoinForm = () => {
   const [isActiveJoinBtn, setIsActiveJoinBtn] = useState(false);
   const [emailAlert, setEmailAlert] = useState("");
   const [passwordAlert, setPasswordAlert] = useState("");
+  const emailCondition = email.includes("@") && email.includes(".");
+  const passwordCondition = password.length >= 8;
 
   const joinHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,7 +18,6 @@ const JoinForm = () => {
       await signUp({ email, password }).then((res) => {
         if (res.data.token) {
           navigate("/login");
-          console.log(res);
         }
       });
     } catch (error: any) {
@@ -25,7 +26,7 @@ const JoinForm = () => {
   };
 
   useEffect(() => {
-    email.includes("@") && email.includes(".") && password.length >= 8
+    emailCondition && passwordCondition
       ? setIsActiveJoinBtn(true)
       : setIsActiveJoinBtn(false);
   }),
@@ -40,17 +41,15 @@ const JoinForm = () => {
     [email];
 
   useEffect(() => {
-    email.includes("@") && email.includes(".")
-      ? setEmailAlert("")
-      : setEmailAlert("@, .을 포함해주세요");
+    emailCondition ? setEmailAlert("") : setEmailAlert("@, .을 포함해주세요");
   }),
     [password];
 
-  const joinEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const getEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const joinpasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const getPasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
@@ -61,7 +60,7 @@ const JoinForm = () => {
         placeholder="이메일을 입력해주세요"
         id="email"
         className="text-center rounded p-3 mb-3 outline-[#7986cb]"
-        onChange={joinEmailHandler}
+        onChange={getEmailHandler}
         required
       />
       {!isActiveJoinBtn && <div className="text-[#e45f5a]">{emailAlert}</div>}
@@ -70,7 +69,7 @@ const JoinForm = () => {
         placeholder="비밀번호를 입력해주세요"
         id="password"
         className="text-center rounded p-3 my-3 outline-[#7986cb] block"
-        onChange={joinpasswordHandler}
+        onChange={getPasswordHandler}
         required
       />
       {!isActiveJoinBtn && (

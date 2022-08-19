@@ -6,22 +6,24 @@ import { authActions } from "../store/slice";
 import { login } from "../api/auth";
 import { Link } from "react-router-dom";
 
-export default function Login() {
+const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isActiveLogin, setIsActiveLogin] = useState(false);
+  const emailCondition = email.includes("@") && email.includes(".");
+  const passwordCondition = password.length >= 8;
 
-  function LoginEmailHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  const LoginEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-  }
+  };
 
-  function LoginpasswordHandler(e: React.ChangeEvent<HTMLInputElement>) {
+  const LoginpasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  }
+  };
 
-  async function loginHandler(e: React.FormEvent<HTMLFormElement>) {
+  const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await login({ email, password }).then((res) => {
@@ -34,10 +36,10 @@ export default function Login() {
     } catch (error: any) {
       alert(error.response.data.details);
     }
-  }
+  };
 
   useEffect(() => {
-    email.includes("@") && email.includes(".") && password.length >= 8
+    emailCondition && passwordCondition
       ? setIsActiveLogin(true)
       : setIsActiveLogin(false);
   }),
@@ -85,4 +87,6 @@ export default function Login() {
       </form>
     </>
   );
-}
+};
+
+export default Login;

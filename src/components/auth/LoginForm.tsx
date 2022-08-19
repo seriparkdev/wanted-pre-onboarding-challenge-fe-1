@@ -11,12 +11,14 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isActiveLogin, setIsActiveLogin] = useState(false);
+  const emailCondition = email.includes("@") && email.includes(".");
+  const passwordCondition = password.length >= 8;
 
-  const inputEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const getEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const inputPasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const getPasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
@@ -36,7 +38,7 @@ const LoginForm = () => {
   };
 
   useEffect(() => {
-    email.includes("@") && email.includes(".") && password.length >= 8
+    emailCondition && passwordCondition
       ? setIsActiveLogin(true)
       : setIsActiveLogin(false);
   }),
@@ -49,7 +51,7 @@ const LoginForm = () => {
         type="text"
         name="email"
         placeholder="이메일을 입력해주세요"
-        onChange={inputEmailHandler}
+        onChange={getEmailHandler}
         className="text-center rounded mb-5 p-3 outline-[#7986cb]"
         required
       />
@@ -57,7 +59,7 @@ const LoginForm = () => {
         type="password"
         name="password"
         placeholder="비밀번호를 입력해주세요"
-        onChange={inputPasswordHandler}
+        onChange={getPasswordHandler}
         className="text-center rounded p-3 outline-[#7986cb]"
         required
       />

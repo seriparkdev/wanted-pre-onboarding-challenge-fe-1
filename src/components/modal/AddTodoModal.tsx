@@ -29,6 +29,10 @@ const AddTodoModal = ({
     setContent(e.target.value);
   };
 
+  const modalOpenHandler = () => {
+    setIsOpenModal(!isOpenModal);
+  };
+
   return (
     <>
       <div className="fixed bg-black opacity-60 top-0 left-0 w-full h-full"></div>
@@ -62,7 +66,7 @@ const AddTodoModal = ({
         <button
           type="submit"
           className="bg-[#7986cb] mt-2 p-2 rounded text-white"
-          onClick={() => setIsOpenModal(!isOpenModal)}
+          onClick={modalOpenHandler}
         >
           닫기
         </button>
