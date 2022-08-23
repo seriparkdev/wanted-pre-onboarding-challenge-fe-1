@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../store/slice";
 import { login } from "../../api/auth";
+import Storage from "../../utils/Storage";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const LoginForm = () => {
     try {
       await login({ email, password }).then((res) => {
         if (res.data.token) {
-          localStorage.setItem("token", res.data.token);
+          Storage.set("token", res.data.token);
           dispatch(authActions.login());
           navigate("/");
         }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/reducers";
@@ -7,9 +7,11 @@ import { authActions } from "../store/slice";
 import { getTodos, getTodoById, updateTodo, deleteTodo } from "../api/todo";
 import AddTodoModal from "../components/modal/AddTodoModal";
 import { Todo } from "../types/todo";
+import Storage from "../utils/Storage";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [todoId, setTodoId] = useState("");
@@ -28,6 +30,12 @@ const Home = () => {
     }
   }, [todoList]);
 
+  useEffect(() => {
+    if (!Storage.get("token")) {
+      navigate("/login");
+    }
+  });
+
   const getTodoIdHandler = (id: string) => {
     getTodoById(id).then((res) => {
       setTodoId(res.data.data.id);
@@ -45,7 +53,7 @@ const Home = () => {
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
-    localStorage.removeItem("token");
+    Storage.remove("token");
   };
 
   const updateHandler = (id: string) => {
