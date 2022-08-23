@@ -2,7 +2,7 @@ import { authFormInput } from "../types/auth";
 import { authApi } from "./axiosInstance";
 
 const signUp = ({ email, password }: authFormInput) => {
-  return getUserToken("/user/create", { email, password });
+  return getUserToken("/users/create", { email, password });
 };
 
 const login = ({ email, password }: authFormInput) => {
