@@ -1,4 +1,5 @@
 import React from "react";
+import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -32,8 +33,12 @@ const LoginForm = () => {
           navigate("/");
         }
       });
-    } catch (error: any) {
-      alert(error.response.data.details);
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        alert(error.response.data.details);
+      } else {
+        alert("로그인에 실패했습니다.");
+      }
     }
   };
 

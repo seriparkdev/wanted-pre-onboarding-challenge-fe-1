@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp } from "../../api/auth";
@@ -20,8 +21,12 @@ const JoinForm = () => {
           navigate("/login");
         }
       });
-    } catch (error: any) {
-      alert(error.response.data.details);
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        alert(error.response.data.details);
+      } else {
+        alert("로그인에 실패했습니다.");
+      }
     }
   };
 
