@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/reducers";
@@ -11,7 +11,6 @@ import Storage from "../utils/Storage";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [todoId, setTodoId] = useState("");
@@ -29,12 +28,6 @@ const Home = () => {
       console.log(error);
     }
   }, [todoList]);
-
-  useEffect(() => {
-    if (!Storage.get("token")) {
-      navigate("/login");
-    }
-  });
 
   const getTodoIdHandler = (id: string) => {
     getTodoById(id).then((res) => {
