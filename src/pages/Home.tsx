@@ -1,57 +1,57 @@
 import React from "react";
 import { Link, Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/reducers";
 import { authActions } from "../store/slice";
-import { getTodos, getTodoById, updateTodo, deleteTodo } from "../api/todo";
+import { getTodoById } from "../api/todo";
 import AddTodoModal from "../components/modal/AddTodoModal";
-import { Todo } from "../types/todo";
 import Storage from "../utils/Storage";
+import useGetTodos from "../hooks/todo/useGetTodos";
+import useDeleteTodo from "../hooks/todo/useDeleteTodo";
+import useUpdateTodo from "../hooks/todo/useUpdateTodo";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const [todoList, setTodoList] = useState<Todo[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [todoId, setTodoId] = useState("");
-  const [newTitle, setNewTitle] = useState("");
-  const [newContent, setNewContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
   const hasAuth = useSelector((state: RootState) => state.auth.auth);
 
-  useEffect(() => {
-    try {
-      getTodos().then((res) => {
-        setTodoList(res.data.data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [todoList]);
+  // 모든 todo 가져오기
+  const { todos } = useGetTodos();
 
-  const getTodoIdHandler = (id: string) => {
+  // todo 삭제하기
+  const { mutate: deleteTodoWith } = useDeleteTodo();
+
+  const deleteTodoBtnHandler = (id: string) => {
+    deleteTodoWith(id);
+  };
+
+  // todo 수정하기
+  const { mutate: updateTodoWith } = useUpdateTodo();
+
+  const updateTodoHandler = (id: string) => {
+    setIsEditMode(!isEditMode);
+    updateTodoWith({ title, content, id });
+  };
+
+  const switchToEditMode = (id: string) => {
+    setIsEditMode(true);
+    getTodoId(id);
+  };
+
+  const getTodoId = (id: string) => {
     getTodoById(id).then((res) => {
       setTodoId(res.data.data.id);
     });
   };
 
-  const updateTodoHandler = (id: string) => {
-    setIsEditMode(!isEditMode);
-    updateTodo(newTitle, newContent, id);
-  };
-
-  const deleteTodoHandler = (id: string) => {
-    deleteTodo(id);
-  };
-
   const logoutHandler = () => {
     dispatch(authActions.logout());
     Storage.remove("token");
-  };
-
-  const updateHandler = (id: string) => {
-    setIsEditMode(!isEditMode);
-    getTodoIdHandler(id);
   };
 
   const editModeHandler = () => {
@@ -63,11 +63,11 @@ const Home = () => {
   };
 
   const getNewTitleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTitle(e.target.value);
+    setTitle(e.target.value);
   };
 
   const getNewContentHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewContent(e.target.value);
+    setContent(e.target.value);
   };
 
   return (
@@ -94,89 +94,90 @@ const Home = () => {
               </button>
             </div>
             <section className="mt-1">
-              {todoList.map((todo) => (
-                <div key={todo.id}>
-                  {isEditMode && todo.id === todoId ? (
-                    <div className="rounded flex flex-col pb-3 bg-white mx-16 break-all p-6 mb-6">
-                      <input
-                        type="text"
-                        defaultValue={todo.title}
-                        onChange={getNewTitleHandler}
-                        className="rounded px-2 border-2 border-[#7986cb] outline-[#283593]"
-                        required
-                      />
-                      <input
-                        type="text"
-                        defaultValue={todo.content}
-                        onChange={getNewContentHandler}
-                        className="rounded px-2 border-2 border-[#7986cb] mt-2 outline-[#283593]"
-                        required
-                      />
-                      <div className="text-right text-white rounded-lg text-sm">
-                        <button
-                          onClick={editModeHandler}
-                          className="my-2 py-1 bg-[#5c6bc0] rounded-lg w-20 mr-2"
-                        >
-                          수정 취소
-                        </button>
-                        <button
-                          onClick={() => updateTodoHandler(todo.id)}
-                          className="bg-[#5c6bc0] rounded-lg w-20 py-1"
-                        >
-                          완료
-                        </button>
+              {todos &&
+                todos.map((todo) => (
+                  <div key={todo.id}>
+                    {isEditMode && todo.id === todoId ? (
+                      <div className="rounded flex flex-col pb-3 bg-white mx-16 break-all p-6 mb-6">
+                        <input
+                          type="text"
+                          defaultValue={todo.title}
+                          onChange={getNewTitleHandler}
+                          className="rounded px-2 border-2 border-[#7986cb] outline-[#283593]"
+                          required
+                        />
+                        <input
+                          type="text"
+                          defaultValue={todo.content}
+                          onChange={getNewContentHandler}
+                          className="rounded px-2 border-2 border-[#7986cb] mt-2 outline-[#283593]"
+                          required
+                        />
+                        <div className="text-right text-white rounded-lg text-sm">
+                          <button
+                            onClick={editModeHandler}
+                            className="my-2 py-1 bg-[#5c6bc0] rounded-lg w-20 mr-2"
+                          >
+                            수정 취소
+                          </button>
+                          <button
+                            onClick={() => updateTodoHandler(todo.id)}
+                            className="bg-[#5c6bc0] rounded-lg w-20 py-1"
+                          >
+                            완료
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="mb-6 px-16">
-                      <div className="bg-white py-4 rounded relative px-6 pb-4">
-                        <span className="font-semibold break-all text-justify">
-                          {todo.title}
-                        </span>
-                        <span className="absolute top-4 right-4">
-                          <Link to={`/${todo.id}`}>
+                    ) : (
+                      <div className="mb-6 px-16">
+                        <div className="bg-white py-4 rounded relative px-6 pb-4">
+                          <span className="font-semibold break-all text-justify">
+                            {todo.title}
+                          </span>
+                          <span className="absolute top-4 right-4">
+                            <Link to={`/${todo.id}`}>
+                              <button
+                                type="button"
+                                className="mr-2 bg-[#e8eaf6] px-1 rounded"
+                              >
+                                상세
+                              </button>
+                            </Link>
                             <button
                               type="button"
+                              onClick={() => switchToEditMode(todo.id)}
                               className="mr-2 bg-[#e8eaf6] px-1 rounded"
                             >
-                              상세
+                              수정
                             </button>
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => updateHandler(todo.id)}
-                            className="mr-2 bg-[#e8eaf6] px-1 rounded"
-                          >
-                            수정
-                          </button>
 
-                          <button
-                            type="button"
-                            onClick={() => deleteTodoHandler(todo.id)}
-                            className="bg-[#e8eaf6] px-1 rounded"
-                          >
-                            삭제
-                          </button>
-                        </span>
-                        <Routes>
-                          <Route
-                            path={`/${todo.id}`}
-                            element={
-                              <div className="flex flex-col break-all mt-4">
-                                <span>{todo.content}</span>
-                                <span className="flex flex-col text-xs text-[#999999] text-right mt-4">
-                                  <span>만든 날짜: {todo.createdAt}</span>
-                                  <span>수정 날짜: {todo.updatedAt}</span>
-                                </span>
-                              </div>
-                            }
-                          />
-                        </Routes>
+                            <button
+                              type="button"
+                              onClick={() => deleteTodoBtnHandler(todo.id)}
+                              className="bg-[#e8eaf6] px-1 rounded"
+                            >
+                              삭제
+                            </button>
+                          </span>
+                          <Routes>
+                            <Route
+                              path={`/${todo.id}`}
+                              element={
+                                <div className="flex flex-col break-all mt-4">
+                                  <span>{todo.content}</span>
+                                  <span className="flex flex-col text-xs text-[#999999] text-right mt-4">
+                                    <span>만든 날짜: {todo.createdAt}</span>
+                                    <span>수정 날짜: {todo.updatedAt}</span>
+                                  </span>
+                                </div>
+                              }
+                            />
+                          </Routes>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
             </section>
           </main>
         </div>

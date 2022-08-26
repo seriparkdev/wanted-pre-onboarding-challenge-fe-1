@@ -1,20 +1,21 @@
 import React from "react";
-import { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { authActions } from "../../store/slice";
-import { login } from "../../api/auth";
-import Storage from "../../utils/Storage";
+import useLogin from "../../hooks/auth/useLogin";
 
 const LoginForm = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isActiveLogin, setIsActiveLogin] = useState(false);
   const emailCondition = email.includes("@") && email.includes(".");
   const passwordCondition = password.length >= 8;
+
+  // 로그인
+  const { mutate: userLogin } = useLogin();
+
+  const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    userLogin({ email, password });
+  };
 
   const getEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -22,25 +23,6 @@ const LoginForm = () => {
 
   const getPasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  };
-
-  const loginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      await login({ email, password }).then((res) => {
-        if (res.data.token) {
-          Storage.set("token", res.data.token);
-          dispatch(authActions.login());
-          navigate("/");
-        }
-      });
-    } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        alert(error.response.data.details);
-      } else {
-        alert("로그인에 실패했습니다.");
-      }
-    }
   };
 
   useEffect(() => {

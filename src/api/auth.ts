@@ -1,17 +1,25 @@
-import { authFormInput } from "../types/auth";
+import { AuthFormInput, AuthResponse } from "../types/auth";
 import { authApi } from "./axiosInstance";
 
-const signUp = ({ email, password }: authFormInput) => {
-  return getUserToken("/users/create", { email, password });
+const signUp = async ({
+  email,
+  password,
+}: AuthFormInput): Promise<AuthResponse> => {
+  const { data } = await getUserToken("/users/create", { email, password });
+  return data;
 };
 
-const login = ({ email, password }: authFormInput) => {
-  return getUserToken("/users/login", { email, password });
+const login = async ({
+  email,
+  password,
+}: AuthFormInput): Promise<AuthResponse> => {
+  const { data } = await getUserToken("/users/login", { email, password });
+  return data;
 };
 
 export { signUp, login };
 
-const getUserToken = (url: string, { email, password }: authFormInput) => {
+const getUserToken = (url: string, { email, password }: AuthFormInput) => {
   return authApi.post(url, {
     email,
     password,

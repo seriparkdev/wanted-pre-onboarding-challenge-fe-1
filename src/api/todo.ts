@@ -1,8 +1,9 @@
 import { todoApi } from "./axiosInstance";
+import { NewTodo, Todo, TodoId } from "../types/todo";
 
-const getTodos = () => {
-  const response = todoApi.get("/todos");
-  return response;
+const getTodos = async (): Promise<Todo[]> => {
+  const response = await todoApi.get("/todos");
+  return response.data.data;
 };
 
 const getTodoById = (id: string) => {
@@ -10,18 +11,22 @@ const getTodoById = (id: string) => {
   return response;
 };
 
-const createTodo = (title: string, content: string) => {
-  const response = todoApi.post("/todos", {
+const createTodo = async ({ title, content }: NewTodo): Promise<Todo> => {
+  const response: Todo = await todoApi.post("/todos", {
     title,
     content,
   });
   return response;
 };
 
-const updateTodo = (newTitle: string, newContent: string, id: string) => {
-  const response = todoApi.put(`/todos/${id}`, {
-    title: newTitle,
-    content: newContent,
+const updateTodo = async ({
+  title,
+  content,
+  id,
+}: NewTodo & TodoId): Promise<Todo> => {
+  const response: Todo = await todoApi.put(`/todos/${id}`, {
+    title,
+    content,
   });
   return response;
 };

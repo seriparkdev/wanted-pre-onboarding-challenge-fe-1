@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createTodo } from "../../api/todo";
+import useCreateTodo from "../../hooks/todo/useCreateTodo";
 
 const AddTodoModal = ({
   isOpenModal,
@@ -11,14 +11,16 @@ const AddTodoModal = ({
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const createTodoHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const { mutate: addNewTodo } = useCreateTodo();
+
+  const resetState = () => {
+    setTitle(""), setContent(""), setIsOpenModal(!isOpenModal);
+  };
+
+  const addTodoBtnHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      createTodo(title, content);
-      setTitle(""), setContent(""), setIsOpenModal(!isOpenModal);
-    } catch (error) {
-      console.log(error);
-    }
+    addNewTodo({ title, content });
+    resetState();
   };
 
   const inputTitleHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +39,7 @@ const AddTodoModal = ({
     <>
       <div className="fixed bg-black opacity-60 top-0 left-0 w-full h-full"></div>
       <form
-        onSubmit={createTodoHandler}
+        onSubmit={addTodoBtnHandler}
         className="flex flex-col fixed top-2/4 left-1/2 translate-x-[-50%] translate-y-[-50%] w-5/12 rounded px-10 py-14 bg-white"
       >
         <div className="text-center mb-4 text-lg">TODO 추가</div>

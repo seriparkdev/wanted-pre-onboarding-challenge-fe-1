@@ -1,10 +1,8 @@
-import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { signUp } from "../../api/auth";
+
+import useSignUp from "../../hooks/auth/useSignUp";
 
 const JoinForm = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isActiveJoinBtn, setIsActiveJoinBtn] = useState(false);
@@ -13,21 +11,12 @@ const JoinForm = () => {
   const emailCondition = email.includes("@") && email.includes(".");
   const passwordCondition = password.length >= 8;
 
+  // 회원가입
+  const { mutate: userSignUp } = useSignUp();
+
   const joinHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      await signUp({ email, password }).then((res) => {
-        if (res.data.token) {
-          navigate("/login");
-        }
-      });
-    } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        alert(error.response.data.details);
-      } else {
-        alert("로그인에 실패했습니다.");
-      }
-    }
+    userSignUp({ email, password });
   };
 
   useEffect(() => {
@@ -39,7 +28,7 @@ const JoinForm = () => {
     [password];
 
   useEffect(() => {
-    password.length >= 8
+    passwordCondition
       ? setPasswordAlert("")
       : setPasswordAlert("비밀번호는 8자리 이상으로 입력해주세요");
   }),
