@@ -1,4 +1,4 @@
-import { todoApi } from "./axiosInstance";
+import { todoApi } from "./baseApi";
 import { NewTodo, Todo, TodoId } from "../types/todo";
 
 const getTodos = async (): Promise<Todo[]> => {

@@ -7,7 +7,6 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
 
   if (!hasToken) {
-    alert("로그인 해주세요.");
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   return children;

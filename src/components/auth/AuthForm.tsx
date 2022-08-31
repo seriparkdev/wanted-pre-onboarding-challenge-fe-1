@@ -1,28 +1,34 @@
 import React, { useEffect, useState } from "react";
-
+import { AuthFormType } from "../../types/auth";
 import useSignUp from "../../hooks/auth/useSignUp";
+import useLogin from "../../hooks/auth/useLogin";
+import { Link } from "react-router-dom";
 
-const JoinForm = () => {
+const AuthForm = ({ formType }: AuthFormType) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isActiveJoinBtn, setIsActiveJoinBtn] = useState(false);
+  const [isActiveSubmitBtn, setIsActiveSubmitBtn] = useState(false);
   const [emailAlert, setEmailAlert] = useState("");
   const [passwordAlert, setPasswordAlert] = useState("");
   const emailCondition = email.includes("@") && email.includes(".");
   const passwordCondition = password.length >= 8;
 
-  // 회원가입
   const { mutate: userSignUp } = useSignUp();
+  const { mutate: userLogin } = useLogin();
 
-  const joinHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  const formSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    userSignUp({ email, password });
+    if (emailCondition && passwordCondition && formType === "회원가입") {
+      userSignUp({ email, password });
+    } else if (emailCondition && passwordCondition && formType === "로그인") {
+      userLogin({ email, password });
+    }
   };
 
   useEffect(() => {
     emailCondition && passwordCondition
-      ? setIsActiveJoinBtn(true)
-      : setIsActiveJoinBtn(false);
+      ? setIsActiveSubmitBtn(true)
+      : setIsActiveSubmitBtn(false);
   }),
     [email],
     [password];
@@ -48,7 +54,7 @@ const JoinForm = () => {
   };
 
   return (
-    <form onSubmit={joinHandler} className="flex flex-col w-80 m-auto">
+    <form onSubmit={formSubmitHandler} className="flex flex-col w-80 m-auto">
       <input
         type="text"
         placeholder="이메일을 입력해주세요"
@@ -57,7 +63,7 @@ const JoinForm = () => {
         onChange={getEmailHandler}
         required
       />
-      {!isActiveJoinBtn && <div className="text-[#e45f5a]">{emailAlert}</div>}
+      {!isActiveSubmitBtn && <div className="text-[#e45f5a]">{emailAlert}</div>}
       <input
         type="password"
         placeholder="비밀번호를 입력해주세요"
@@ -66,22 +72,29 @@ const JoinForm = () => {
         onChange={getPasswordHandler}
         required
       />
-      {!isActiveJoinBtn && (
+      {!isActiveSubmitBtn && (
         <div className="text-[#e45f5a]">{passwordAlert}</div>
       )}
       <button
         type="submit"
-        disabled={!isActiveJoinBtn}
+        disabled={!isActiveSubmitBtn}
         className={
-          isActiveJoinBtn
+          isActiveSubmitBtn
             ? "mt-6 text-white rounded p-4 bg-[#7986cb] font-semibold"
             : "mt-6 bg-[#c5cae9] text-white rounded p-4 font-semibold"
         }
       >
-        가입하기
+        {formType}
       </button>
+      {formType === "로그인" && (
+        <>
+          <Link to="/join" className="text-[#7986cb] mt-3 text-right">
+            회원가입
+          </Link>
+        </>
+      )}
     </form>
   );
 };
 
-export default JoinForm;
+export default AuthForm;

@@ -1,5 +1,5 @@
 import { AuthFormInput, AuthResponse } from "../types/auth";
-import { authApi } from "./axiosInstance";
+import { authApi } from "./baseApi";
 
 const signUp = async ({
   email,
