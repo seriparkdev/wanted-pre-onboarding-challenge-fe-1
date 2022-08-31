@@ -4,14 +4,17 @@ import Storage from "../utils/Storage";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/slice";
 import TodoList from "../components/todo/TodoList";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const logoutHandler = () => {
     dispatch(authActions.logout());
     Storage.remove("token");
+    navigate("/login");
   };
 
   const modalOpenHandler = () => {
